@@ -123,7 +123,7 @@ Numbers must be digits only, international format, no prefix:
 | ERR010 | Zero balance | Recharge at kwtsms.com |
 | ERR011 | Insufficient balance | Buy more credits |
 | ERR025 | Invalid number format | Use international format (e.g., `96598765432`) |
-| ERR028 | Same number too fast | Wait 15 seconds between sends to the same number |
+| ERR028 | Sent to the same number too soon. | Duplicate SMS protection is opt-in per account; wait for the account's window (10 seconds by default) |
 
 Full error code reference: [API Documentation (PDF)](https://www.kwtsms.com/doc/KwtSMS.com_API_Documentation_v41.pdf)
 
@@ -132,7 +132,7 @@ Full error code reference: [API Documentation (PDF)](https://www.kwtsms.com/doc/
 | | Test (`"test":"1"`) | Live (`"test":"0"`) |
 |--|---------------------|---------------------|
 | Message delivered? | No — queued only | Yes |
-| Credits consumed? | No | Yes |
+| Credits consumed? | Held until you delete the message from the Sending Queue | Yes |
 | Use for | Development, testing | Production |
 
 Test messages appear in your [Sending Queue](https://www.kwtsms.com/login/). Delete them to keep the queue clean.

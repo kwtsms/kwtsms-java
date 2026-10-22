@@ -109,7 +109,8 @@ class ApiErrorsTest {
     void enrichError_err028RateLimit() {
         Map<String, Object> r = mockError("ERR028", "Rate limited");
         Map<String, Object> enriched = ApiErrors.enrichError(r);
-        assertTrue(enriched.get("action").toString().contains("15 seconds"));
+        // 2026-10-22 15:35 +03: ERR028 action no longer states a fixed 15 s window.
+        assertTrue(enriched.get("action").toString().contains("too soon"));
     }
 
     @Test

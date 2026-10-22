@@ -38,7 +38,8 @@ public final class ApiErrors {
         m.put("ERR025", "Invalid phone number. Make sure the number includes the country code (e.g., 96598765432 for Kuwait, not 98765432).");
         m.put("ERR026", "This country is not activated on your account. Contact kwtSMS support to enable the destination country.");
         m.put("ERR027", "HTML tags are not allowed in the message. Remove any HTML content and try again.");
-        m.put("ERR028", "You must wait at least 15 seconds before sending to the same number again. No credits were consumed.");
+        // 2026-10-22 15:35 +03: ERR028 text corrected, protection is opt-in per account with a per-account window (10 s default), not a fixed 15 s.
+        m.put("ERR028", "Sent to the same number too soon. Duplicate SMS protection is on for this account, so the whole request was rejected and nothing was charged. Wait for the account's window (10 seconds by default) before resending.");
         m.put("ERR029", "Message ID does not exist or is incorrect.");
         m.put("ERR030", "Message is stuck in the send queue with an error. Delete it at kwtsms.com \u2192 Queue to recover credits.");
         m.put("ERR031", "Message rejected: bad language detected.");

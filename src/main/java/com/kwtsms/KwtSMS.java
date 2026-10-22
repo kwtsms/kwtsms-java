@@ -50,7 +50,9 @@ public class KwtSMS {
      * @param username API username (not your account mobile number)
      * @param password API password
      * @param senderId sender ID (default: "KWT-SMS" for testing only)
-     * @param testMode when true, messages enter the queue but are not delivered (no credits consumed)
+     * @param testMode when true, messages enter the queue but are not delivered; their credits are held
+     *                 until you delete them from the Sending Queue in your kwtsms.com account
+     *                 (2026-10-22 15:35 +03: corrected, test sends are not free)
      * @param logFile  path to JSONL log file (null or empty to disable logging)
      */
     public KwtSMS(String username, String password, String senderId, boolean testMode, String logFile) {

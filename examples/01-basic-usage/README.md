@@ -14,4 +14,4 @@ Demonstrates sending an SMS, verifying credentials, and checking balance.
 - Always call `verify()` first to confirm credentials are valid
 - Save `msgId` from the send response for status tracking and delivery reports
 - Save `balanceAfter` from the send response to avoid extra API calls
-- Use `testMode=true` during development (no credits consumed)
+- Use `testMode=true` during development (queued, not delivered; credits held until you delete it from the Sending Queue)

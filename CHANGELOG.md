@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Docs
+- Test mode: test messages are queued but not delivered. Their credits are held until you delete them from the Sending Queue in your kwtsms.com account (previously documented as "no credits consumed").
+- ERR028 action text no longer states a fixed 15-second wait. Duplicate SMS protection is opt-in per account and its window is set per account (10 seconds by default).
+
 ## [0.4.0] - 2026-03-13
 
 ### Added

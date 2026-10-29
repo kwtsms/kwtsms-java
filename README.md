@@ -1,11 +1,11 @@
 # kwtSMS Java Client
 
-[![Tests](https://github.com/boxlinknet/kwtsms-java/actions/workflows/test.yml/badge.svg)](https://github.com/boxlinknet/kwtsms-java/actions/workflows/test.yml)
-[![CodeQL](https://github.com/boxlinknet/kwtsms-java/actions/workflows/codeql.yml/badge.svg)](https://github.com/boxlinknet/kwtsms-java/actions/workflows/codeql.yml)
-[![GitGuardian](https://github.com/boxlinknet/kwtsms-java/actions/workflows/gitguardian.yml/badge.svg)](https://github.com/boxlinknet/kwtsms-java/actions/workflows/gitguardian.yml)
-[![JitPack](https://jitpack.io/v/boxlinknet/kwtsms-java.svg)](https://jitpack.io/#boxlinknet/kwtsms-java)
+[![Tests](https://github.com/kwtsms/kwtsms-java/actions/workflows/test.yml/badge.svg)](https://github.com/kwtsms/kwtsms-java/actions/workflows/test.yml)
+[![CodeQL](https://github.com/kwtsms/kwtsms-java/actions/workflows/codeql.yml/badge.svg)](https://github.com/kwtsms/kwtsms-java/actions/workflows/codeql.yml)
+[![GitGuardian](https://github.com/kwtsms/kwtsms-java/actions/workflows/gitguardian.yml/badge.svg)](https://github.com/kwtsms/kwtsms-java/actions/workflows/gitguardian.yml)
+[![JitPack](https://jitpack.io/v/kwtsms/kwtsms-java.svg)](https://jitpack.io/#kwtsms/kwtsms-java)
 [![Java 8+](https://img.shields.io/badge/Java-8%2B-blue)](https://www.oracle.com/java/)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/boxlinknet/kwtsms-java)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/kwtsms/kwtsms-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Java client for the [kwtSMS API](https://www.kwtsms.com). Send SMS, check balance, validate numbers, list sender IDs, check coverage, get delivery reports.
@@ -44,7 +44,7 @@ repositories {
 
 // build.gradle
 dependencies {
-    implementation 'com.github.boxlinknet:kwtsms-java:0.4.0'
+    implementation 'com.github.kwtsms:kwtsms-java:0.4.0'
 }
 ```
 
@@ -58,7 +58,7 @@ repositories {
 
 // build.gradle.kts
 dependencies {
-    implementation("com.github.boxlinknet:kwtsms-java:0.4.0")
+    implementation("com.github.kwtsms:kwtsms-java:0.4.0")
 }
 ```
 
@@ -73,7 +73,7 @@ dependencies {
 </repositories>
 
 <dependency>
-    <groupId>com.github.boxlinknet</groupId>
+    <groupId>com.github.kwtsms</groupId>
     <artifactId>kwtsms-java</artifactId>
     <version>0.4.0</version>
 </dependency>

@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.boxlinknet:kwtsms-java:0.1.0'
+    implementation 'com.github.kwtsms:kwtsms-java:0.1.0'
 }
 ```
 

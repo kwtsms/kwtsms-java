@@ -139,7 +139,7 @@ Test messages appear in your [Sending Queue](https://www.kwtsms.com/login/). Del
 
 ## Next steps
 
-This example shows raw HTTP calls. For production use, consider the [kwtsms-java client library](https://github.com/boxlinknet/kwtsms-java) which adds:
+This example shows raw HTTP calls. For production use, consider the [kwtsms-java client library](https://github.com/kwtsms/kwtsms-java) which adds:
 
 - Phone number normalization (Arabic digits, `+`/`00` prefix, spaces, dashes)
 - Duplicate phone number removal

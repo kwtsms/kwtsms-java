@@ -4,7 +4,7 @@
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/boxlinknet/kwtsms-java.git
+git clone https://github.com/kwtsms/kwtsms-java.git
 cd kwtsms-java
 ```
 

@@ -269,6 +269,6 @@ public class RawApi {
         System.out.println();
         System.out.println("For a full-featured client library with phone normalization,");
         System.out.println("message cleaning, auto-batching, and error handling, use kwtsms-java:");
-        System.out.println("  https://github.com/boxlinknet/kwtsms-java");
+        System.out.println("  https://github.com/kwtsms/kwtsms-java");
     }
 }

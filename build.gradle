@@ -63,7 +63,8 @@ publishing {
                 developers {
                     developer {
                         id = 'boxlinknet'
-                        name = 'Boxlink'
+                        // 2026-11-05 12:08 +03: author name Boxlink -> kwtSMS, owner decision 2026-11-05 00:34, int-license
+                        name = 'kwtSMS'
                         url = 'https://www.kwtsms.com'
                     }
                 }

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Package author and license holder are now kwtSMS.
 - Docs, examples, Javadoc and the ERR006/ERR025 action text use the placeholder `965XXXXXXXX` instead of a real-looking phone number. Tests read the number from the `KWTSMS_TEST_NUMBER` environment variable and are skipped when it is unset.
 - The live 250-number bulk send test was removed: it sent to generated numbers that may belong to real people. Live tests now send only to `KWTSMS_TEST_NUMBER`. The client has no HTTP seam, so batching (200 + 50) is not covered by an offline test.
 

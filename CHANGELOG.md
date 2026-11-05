@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- The client sends a User-Agent `kwtsms-java/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional sixth constructor argument `appName` puts your app's token in front, e.g. `kwtsms-wordpress/3.5.2 kwtsms-java/0.4.1`. New `KwtSMS.VERSION` (generated from build.gradle at build time), `KwtSMS.buildUserAgent()` and `getUserAgent()`.
+
 ### Changed
 - Package author and license holder are now kwtSMS.
 - Docs, examples, Javadoc and the ERR006/ERR025 action text use the placeholder `965XXXXXXXX` instead of a real-looking phone number. Tests read the number from the `KWTSMS_TEST_NUMBER` environment variable and are skipped when it is unset.

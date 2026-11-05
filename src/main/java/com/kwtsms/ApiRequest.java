@@ -30,12 +30,23 @@ final class ApiRequest {
      * @param endpoint API endpoint name (e.g., "send", "balance")
      * @param payload  request body as a map
      * @param logFile  path to JSONL log file (empty string to disable logging)
+     * @param userAgent User-Agent header value (see KwtSMS.buildUserAgent)
      * @return parsed JSON response as a map
      * @throws ApiException on network or parsing errors
+     * 2026-11-05 14:20 +03: userAgent parameter added, sent on every call (#939).
+     */
+    static Map<String, Object> post(String endpoint, Map<String, Object> payload, String logFile, String userAgent) {
+        return post(BASE_URL, endpoint, payload, logFile, userAgent);
+    }
+
+    /**
+     * Same as {@link #post(String, Map, String, String)} against a given base URL; package-private so unit
+     * tests can point it at a local server. 2026-11-05 14:20 +03: added for the User-Agent test (#939).
      */
     @SuppressWarnings("unchecked")
-    static Map<String, Object> post(String endpoint, Map<String, Object> payload, String logFile) {
-        String url = BASE_URL + "/" + endpoint + "/";
+    static Map<String, Object> post(String baseUrl, String endpoint, Map<String, Object> payload, String logFile,
+                                    String userAgent) {
+        String url = baseUrl + "/" + endpoint + "/";
         String jsonBody = toJson(payload);
         String responseBody = "";
 
@@ -44,6 +55,8 @@ final class ApiRequest {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
+            // 2026-11-05 14:20 +03: kwtsms-java/<version>, app token first when given (#939).
+            connection.setRequestProperty("User-Agent", userAgent);
             connection.setConnectTimeout(TIMEOUT_MS);
             connection.setReadTimeout(TIMEOUT_MS);
             connection.setInstanceFollowRedirects(false);

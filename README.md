@@ -121,6 +121,16 @@ KwtSMS sms = new KwtSMS("java_your_api_user", "java_your_api_pass", "MY-SENDER",
 
 `KwtSMS.fromEnv()` reads environment variables first, falls back to `.env` file.
 
+### User-Agent
+
+Every API request carries the User-Agent `kwtsms-java/<version>`: the library name and version only, no
+personal or customer data. Pass your own product token as the sixth constructor argument to put it in front:
+
+```java
+KwtSMS sms = new KwtSMS("java_your_api_user", "java_your_api_pass", "MY-SENDER", false, "kwtsms.log", "my-shop/2.1.0");
+// User-Agent: my-shop/2.1.0 kwtsms-java/0.4.1
+```
+
 ## Credential Management
 
 **Never hardcode credentials.** Use one of these approaches:

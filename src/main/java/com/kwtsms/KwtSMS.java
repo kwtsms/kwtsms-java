@@ -1,11 +1,14 @@
 package com.kwtsms;
 
+import java.io.IOException; // 2026-11-05 14:20 +03: version resource (#939)
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 // 2026-11-05 09:01 +03: Javadoc example uses the 965XXXXXXXX placeholder, the old sample belongs to a real person. Task: int-testnumber
 /**
@@ -37,6 +40,14 @@ public class KwtSMS {
     private final String senderId;
     private final boolean testMode;
     private final String logFile;
+    /** User-Agent sent on every API call (2026-11-05 14:20 +03, #939). */
+    private final String userAgent;
+
+    /**
+     * Library version, generated from build.gradle at build time (resource com/kwtsms/version.properties)
+     * and sent in the User-Agent. 2026-11-05 14:20 +03: added so kwtSMS can count accounts per integration (#939).
+     */
+    public static final String VERSION = loadVersion();
 
     private volatile Double cachedBalance;
     private volatile Double cachedPurchased;
@@ -57,11 +68,65 @@ public class KwtSMS {
      * @param logFile  path to JSONL log file (null or empty to disable logging)
      */
     public KwtSMS(String username, String password, String senderId, boolean testMode, String logFile) {
+        this(username, password, senderId, testMode, logFile, "");
+    }
+
+    /**
+     * Create a KwtSMS client that names the calling app in the User-Agent.
+     *
+     * @param appName optional product token of the calling app or plugin, e.g. "kwtsms-wordpress/3.5.2",
+     *                sent before the library token in the User-Agent (null or empty for none)
+     * 2026-11-05 14:20 +03: added for per-integration counts (#939); the 5-argument constructor delegates here.
+     */
+    public KwtSMS(String username, String password, String senderId, boolean testMode, String logFile,
+                  String appName) {
         this.username = username != null ? username : "";
         this.password = password != null ? password : "";
         this.senderId = senderId != null ? senderId : "KWT-SMS";
         this.testMode = testMode;
         this.logFile = logFile != null ? logFile : "kwtsms.log";
+        this.userAgent = buildUserAgent(appName);
+    }
+
+    /**
+     * The User-Agent this client sends: "[app token ]kwtsms-java/VERSION".
+     * 2026-11-05 14:20 +03: added for per-integration counts (#939).
+     */
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    /**
+     * Build the User-Agent from an optional app token. The token is caller input, so anything outside
+     * printable ASCII is removed (CR/LF would split the header), whitespace runs become '-', leading and
+     * trailing '-' are trimmed, and it is cut to 64 characters.
+     * 2026-11-05 14:20 +03: added for per-integration counts (#939).
+     */
+    public static String buildUserAgent(String appName) {
+        String app = appName == null ? "" : appName.replaceAll("[^\\x20-\\x7E]+", "");
+        app = app.trim().replaceAll("\\s+", "-").replaceAll("^-+|-+$", "");
+        if (app.length() > 64) {
+            app = app.substring(0, 64);
+        }
+        String lib = "kwtsms-java/" + VERSION;
+        return app.isEmpty() ? lib : app + " " + lib;
+    }
+
+    /** Read the version generated from build.gradle (2026-11-05 14:20 +03, #939). */
+    private static String loadVersion() {
+        try (InputStream in = KwtSMS.class.getResourceAsStream("version.properties")) {
+            if (in != null) {
+                Properties p = new Properties();
+                p.load(in);
+                String v = p.getProperty("version", "").trim();
+                if (!v.isEmpty()) {
+                    return v;
+                }
+            }
+        } catch (IOException ignored) {
+            // fall through: a missing resource must never break the client
+        }
+        return "unknown";
     }
 
     public KwtSMS(String username, String password, String senderId, boolean testMode) {
@@ -135,7 +200,7 @@ public class KwtSMS {
      */
     public VerifyResult verify() {
         try {
-            Map<String, Object> response = ApiRequest.post("balance", basePayload(), logFile);
+            Map<String, Object> response = ApiRequest.post("balance", basePayload(), logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             String result = objToString(response.get("result"));
 
             if ("OK".equals(result)) {
@@ -167,7 +232,7 @@ public class KwtSMS {
      */
     public Double balance() {
         try {
-            Map<String, Object> response = ApiRequest.post("balance", basePayload(), logFile);
+            Map<String, Object> response = ApiRequest.post("balance", basePayload(), logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             if ("OK".equals(objToString(response.get("result")))) {
                 Double available = objToDouble(response.get("available"));
                 Double purchased = objToDouble(response.get("purchased"));
@@ -280,7 +345,7 @@ public class KwtSMS {
         payload.put("test", testMode ? "1" : "0");
 
         try {
-            Map<String, Object> response = ApiRequest.post("send", payload, logFile);
+            Map<String, Object> response = ApiRequest.post("send", payload, logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             String result = objToString(response.get("result"));
 
             if ("OK".equals(result)) {
@@ -442,7 +507,7 @@ public class KwtSMS {
         try {
             Map<String, Object> payload = basePayload();
             payload.put("mobile", join(deduplicated, ","));
-            Map<String, Object> response = ApiRequest.post("validate", payload, logFile);
+            Map<String, Object> response = ApiRequest.post("validate", payload, logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             String result = objToString(response.get("result"));
 
             if ("OK".equals(result)) {
@@ -474,7 +539,7 @@ public class KwtSMS {
      */
     public SenderIdResult senderIds() {
         try {
-            Map<String, Object> response = ApiRequest.post("senderid", basePayload(), logFile);
+            Map<String, Object> response = ApiRequest.post("senderid", basePayload(), logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             String result = objToString(response.get("result"));
 
             if ("OK".equals(result)) {
@@ -501,7 +566,7 @@ public class KwtSMS {
      */
     public CoverageResult coverage() {
         try {
-            Map<String, Object> response = ApiRequest.post("coverage", basePayload(), logFile);
+            Map<String, Object> response = ApiRequest.post("coverage", basePayload(), logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             String result = objToString(response.get("result"));
 
             if ("OK".equals(result)) {
@@ -532,7 +597,7 @@ public class KwtSMS {
         try {
             Map<String, Object> payload = basePayload();
             payload.put("msgid", msgId);
-            Map<String, Object> response = ApiRequest.post("status", payload, logFile);
+            Map<String, Object> response = ApiRequest.post("status", payload, logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             String result = objToString(response.get("result"));
 
             if ("OK".equals(result)) {
@@ -568,7 +633,7 @@ public class KwtSMS {
         try {
             Map<String, Object> payload = basePayload();
             payload.put("msgid", msgId);
-            Map<String, Object> response = ApiRequest.post("dlr", payload, logFile);
+            Map<String, Object> response = ApiRequest.post("dlr", payload, logFile, userAgent); // 2026-11-05 14:21 +03: UA (#939)
             String result = objToString(response.get("result"));
 
             if ("OK".equals(result)) {

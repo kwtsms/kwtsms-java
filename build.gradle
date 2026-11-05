@@ -32,6 +32,15 @@ tasks.named('test') {
     }
 }
 
+// 2026-11-05 14:21 +03: write the project version into version.properties for KwtSMS.VERSION,
+// which is sent in the User-Agent (one version source, #939).
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('com/kwtsms/version.properties') {
+        expand(version: project.version)
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }

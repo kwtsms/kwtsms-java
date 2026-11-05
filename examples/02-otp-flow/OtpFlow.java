@@ -8,7 +8,7 @@ public class OtpFlow {
     public static void main(String[] args) {
         KwtSMS sms = KwtSMS.fromEnv();
 
-        String phone = "96598765432";
+        String phone = "965XXXXXXXX";
         String appName = "MyApp";
 
         // Generate a 6-digit OTP

@@ -6,12 +6,12 @@ public class ErrorHandling {
 
         // Example: send to various input types
         String[] testInputs = {
-            "96598765432",           // valid
+            "965XXXXXXXX",           // valid format (X = digits)
             "user@example.com",      // email
             "123",                   // too short
             "abcdefgh",             // no digits
             "",                      // empty
-            "+965 9876 5432",        // valid with formatting
+            "+965 XXXX XXXX",        // valid format with spaces
         };
 
         for (String input : testInputs) {
@@ -46,7 +46,7 @@ public class ErrorHandling {
 
         // Example: user-facing error messages
         System.out.println("\n--- User-Facing Error Mapping ---");
-        SendResult r = sms.send("96598765432", "Test");
+        SendResult r = sms.send("965XXXXXXXX", "Test");
         if (!"OK".equals(r.getResult())) {
             String userMessage = mapToUserMessage(r.getCode());
             System.out.println("Show to user: " + userMessage);
@@ -60,7 +60,7 @@ public class ErrorHandling {
         switch (code) {
             case "ERR006":
             case "ERR025":
-                return "Please enter a valid phone number in international format (e.g., +965 9876 5432).";
+                return "Please enter a valid phone number in international format (e.g., +965 XXXX XXXX).";
             case "ERR003":
             case "ERR010":
             case "ERR011":

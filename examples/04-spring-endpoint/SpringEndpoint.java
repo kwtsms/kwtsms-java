@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * Usage:
  *   POST /api/sms/send
- *   {"phone": "96598765432", "message": "Hello"}
+ *   {"phone": "965XXXXXXXX", "message": "Hello"}
  *
  * Dependencies (add to build.gradle):
  *   implementation 'com.github.boxlinknet:kwtsms-java:0.1.0'

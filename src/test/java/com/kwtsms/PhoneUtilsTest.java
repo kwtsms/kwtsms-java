@@ -6,53 +6,56 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 import java.util.List;
 
+// 2026-11-05 09:00 +03: Kuwait numbers come from KWTSMS_TEST_NUMBER via TestNumber (skips when unset);
+// pass-through values use the 965XXXXXXXX placeholder; India sample changed so it no longer embeds the old Kuwait sample.
+// Why: the old hardcoded sample belongs to a real person. Task: int-testnumber
 class PhoneUtilsTest {
 
     // ── normalizePhone ──
 
     @Test
     void normalizePhone_stripsPlus() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("+96598765432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("plus")));
     }
 
     @Test
     void normalizePhone_strips00Prefix() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("0096598765432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("00")));
     }
 
     @Test
     void normalizePhone_stripsSpaces() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("965 9876 5432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("spaces")));
     }
 
     @Test
     void normalizePhone_stripsDashes() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("965-9876-5432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("dashes")));
     }
 
     @Test
     void normalizePhone_stripsDots() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("965.9876.5432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("dots")));
     }
 
     @Test
     void normalizePhone_stripsParentheses() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("(965) 98765432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("parens")));
     }
 
     @Test
     void normalizePhone_convertsArabicIndicDigits() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("arabic")));
     }
 
     @Test
     void normalizePhone_convertsExtendedArabicIndicDigits() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("\u06F9\u06F6\u06F5\u06F9\u06F8\u06F7\u06F6\u06F5\u06F4\u06F3\u06F2"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("persian")));
     }
 
     @Test
     void normalizePhone_stripsLeadingZeros() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("0096598765432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("00")));
     }
 
     @Test
@@ -77,7 +80,7 @@ class PhoneUtilsTest {
 
     @Test
     void normalizePhone_mixedContent() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("  +965 (98) 765-432  "));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("mixed")));
     }
 
     // ── Trunk prefix stripping ──
@@ -121,56 +124,56 @@ class PhoneUtilsTest {
     @Test
     void normalizePhone_kuwaitNoTrunkPrefix() {
         // Kuwait numbers don't have trunk prefix issue
-        assertEquals("96598765432", PhoneUtils.normalizePhone("96598765432"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("plain")));
     }
 
     // ── Arabic/Hindi digit edge cases ──
 
     @Test
     void normalizePhone_arabicIndicWithPlus() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("+\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("arabic-plus")));
     }
 
     @Test
     void normalizePhone_arabicIndicWith00Prefix() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("\u0660\u0660\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("arabic-00")));
     }
 
     @Test
     void normalizePhone_arabicIndicWithSpaces() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("\u0669\u0666\u0665 \u0669\u0668\u0667\u0666 \u0665\u0664\u0663\u0662"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("arabic-spaces")));
     }
 
     @Test
     void normalizePhone_arabicIndicWithDashes() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("\u0669\u0666\u0665-\u0669\u0668\u0667\u0666-\u0665\u0664\u0663\u0662"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("arabic-dashes")));
     }
 
     @Test
     void normalizePhone_mixedArabicAndLatinDigits() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("965\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("arabic-cc-latin")));
     }
 
     @Test
     void normalizePhone_extendedArabicIndicWithPlus() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("+\u06F9\u06F6\u06F5\u06F9\u06F8\u06F7\u06F6\u06F5\u06F4\u06F3\u06F2"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("persian-plus")));
     }
 
     @Test
     void normalizePhone_extendedArabicIndicWith00() {
-        assertEquals("96598765432", PhoneUtils.normalizePhone("\u06F0\u06F0\u06F9\u06F6\u06F5\u06F9\u06F8\u06F7\u06F6\u06F5\u06F4\u06F3\u06F2"));
+        TestNumber.assertSame(TestNumber.get(), PhoneUtils.normalizePhone(TestNumber.variant("persian-00")));
     }
 
     // ── findCountryCode ──
 
     @Test
     void findCountryCode_threeDigit() {
-        assertEquals("965", PhoneUtils.findCountryCode("96598765432"));
+        assertEquals("965", PhoneUtils.findCountryCode(TestNumber.PLACEHOLDER));
     }
 
     @Test
     void findCountryCode_twoDigit() {
-        assertEquals("91", PhoneUtils.findCountryCode("919876543210"));
+        assertEquals("91", PhoneUtils.findCountryCode("919123456789"));
     }
 
     @Test
@@ -197,7 +200,7 @@ class PhoneUtilsTest {
 
     @Test
     void validatePhoneFormat_validKuwait() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneFormat("96598765432");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneFormat(TestNumber.get());
         assertTrue(r.isValid());
     }
 
@@ -266,7 +269,7 @@ class PhoneUtilsTest {
 
     @Test
     void validatePhoneFormat_validIndia() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneFormat("919876543210");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneFormat("919123456789");
         assertTrue(r.isValid());
     }
 
@@ -274,17 +277,17 @@ class PhoneUtilsTest {
 
     @Test
     void validatePhoneInput_validKuwaitNumber() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput("96598765432");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput(TestNumber.variant("plain"));
         assertTrue(r.isValid());
         assertNull(r.getError());
-        assertEquals("96598765432", r.getNormalized());
+        TestNumber.assertSame(TestNumber.get(), r.getNormalized());
     }
 
     @Test
     void validatePhoneInput_validWithPlus() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput("+96598765432");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput(TestNumber.variant("plus"));
         assertTrue(r.isValid());
-        assertEquals("96598765432", r.getNormalized());
+        TestNumber.assertSame(TestNumber.get(), r.getNormalized());
     }
 
     @Test
@@ -349,23 +352,23 @@ class PhoneUtilsTest {
 
     @Test
     void validatePhoneInput_arabicDigits() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput("\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput(TestNumber.variant("arabic"));
         assertTrue(r.isValid());
-        assertEquals("96598765432", r.getNormalized());
+        TestNumber.assertSame(TestNumber.get(), r.getNormalized());
     }
 
     @Test
     void validatePhoneInput_extendedArabicIndicDigits() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput("\u06F9\u06F6\u06F5\u06F9\u06F8\u06F7\u06F6\u06F5\u06F4\u06F3\u06F2");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput(TestNumber.variant("persian"));
         assertTrue(r.isValid());
-        assertEquals("96598765432", r.getNormalized());
+        TestNumber.assertSame(TestNumber.get(), r.getNormalized());
     }
 
     @Test
     void validatePhoneInput_arabicDigitsWithPlus() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput("+\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput(TestNumber.variant("arabic-plus"));
         assertTrue(r.isValid());
-        assertEquals("96598765432", r.getNormalized());
+        TestNumber.assertSame(TestNumber.get(), r.getNormalized());
     }
 
     @Test
@@ -377,9 +380,9 @@ class PhoneUtilsTest {
 
     @Test
     void validatePhoneInput_mixedArabicLatinDigits() {
-        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput("965\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662");
+        PhoneUtils.ValidationResult r = PhoneUtils.validatePhoneInput(TestNumber.variant("arabic-cc-latin"));
         assertTrue(r.isValid());
-        assertEquals("96598765432", r.getNormalized());
+        TestNumber.assertSame(TestNumber.get(), r.getNormalized());
     }
 
     // ── Saudi trunk prefix through full validation pipeline ──
@@ -427,19 +430,19 @@ class PhoneUtilsTest {
     @Test
     void deduplicatePhones_removesDuplicates() {
         List<String> result = PhoneUtils.deduplicatePhones(
-                Arrays.asList("96598765432", "96512345678", "96598765432"));
+                Arrays.asList(TestNumber.PLACEHOLDER, "96512345678", TestNumber.PLACEHOLDER));
         assertEquals(2, result.size());
-        assertEquals("96598765432", result.get(0));
+        assertEquals(TestNumber.PLACEHOLDER, result.get(0));
         assertEquals("96512345678", result.get(1));
     }
 
     @Test
     void deduplicatePhones_preservesOrder() {
         List<String> result = PhoneUtils.deduplicatePhones(
-                Arrays.asList("96512345678", "96598765432", "96512345678"));
+                Arrays.asList("96512345678", TestNumber.PLACEHOLDER, "96512345678"));
         assertEquals(2, result.size());
         assertEquals("96512345678", result.get(0));
-        assertEquals("96598765432", result.get(1));
+        assertEquals(TestNumber.PLACEHOLDER, result.get(1));
     }
 
     @Test

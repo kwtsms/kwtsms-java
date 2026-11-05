@@ -26,6 +26,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Run tests
+        # 2026-11-05 09:02 +03: tests read the test number from this secret and skip when unset. Task: int-testnumber
+        env:
+          KWTSMS_TEST_NUMBER: ${{ secrets.KWTSMS_TEST_NUMBER }}
         run: ./gradlew test
 
       - name: Run integration tests
@@ -33,4 +36,6 @@ jobs:
         env:
           JAVA_USERNAME: ${{ secrets.JAVA_USERNAME }}
           JAVA_PASSWORD: ${{ secrets.JAVA_PASSWORD }}
+          # 2026-11-05 09:02 +03: live sends go only to this number; skipped when unset. Task: int-testnumber
+          KWTSMS_TEST_NUMBER: ${{ secrets.KWTSMS_TEST_NUMBER }}
         run: ./gradlew test

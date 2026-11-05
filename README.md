@@ -95,7 +95,7 @@ VerifyResult verify = sms.verify();
 System.out.println("OK: " + verify.isOk() + ", Balance: " + verify.getBalance());
 
 // Send SMS
-SendResult result = sms.send("96598765432", "Hello from Java!");
+SendResult result = sms.send("965XXXXXXXX", "Hello from Java!");
 System.out.println("Result: " + result.getResult());
 System.out.println("Message ID: " + result.getMsgId());
 System.out.println("Balance after: " + result.getBalanceAfter());
@@ -152,16 +152,16 @@ if (result.isOk()) {
 
 ```java
 // Single number
-SendResult r = sms.send("96598765432", "Hello!");
+SendResult r = sms.send("965XXXXXXXX", "Hello!");
 
 // Multiple (comma-separated)
-SendResult r = sms.send("96598765432,96512345678", "Hello!");
+SendResult r = sms.send("965XXXXXXXX,96512345678", "Hello!");
 
 // Multiple (list)
-SendResult r = sms.send(Arrays.asList("96598765432", "96512345678"), "Hello!");
+SendResult r = sms.send(Arrays.asList("965XXXXXXXX", "96512345678"), "Hello!");
 
 // Custom sender ID
-SendResult r = sms.send("96598765432", "Hello!", "MY-SENDER");
+SendResult r = sms.send("965XXXXXXXX", "Hello!", "MY-SENDER");
 
 r.getResult();        // "OK" or "ERROR"
 r.getMsgId();         // message ID (save this!)
@@ -194,7 +194,7 @@ Double cached = sms.getCachedBalance();   // from last verify/send
 ### Validate Numbers
 
 ```java
-ValidateResult r = sms.validate(Arrays.asList("96598765432", "invalid"));
+ValidateResult r = sms.validate(Arrays.asList("965XXXXXXXX", "invalid"));
 r.getOk();       // valid and routable numbers
 r.getEr();       // format errors
 r.getNr();       // no route (country not activated)
@@ -238,7 +238,7 @@ for (DeliveryReportEntry entry : r.getReport()) {
 import com.kwtsms.*;
 
 // Normalize phone number (strips +, 00, spaces, dashes, converts Arabic digits, strips trunk prefix)
-String phone = PhoneUtils.normalizePhone("+965 9876-5432");  // "96598765432"
+String phone = PhoneUtils.normalizePhone("+965 XXXX-XXXX");  // "965XXXXXXXX"
 String saudi = PhoneUtils.normalizePhone("9660559123456");   // "966559123456" (trunk 0 stripped)
 
 // Validate phone input (generic + country-specific rules)
@@ -249,7 +249,7 @@ PhoneUtils.ValidationResult vr2 = PhoneUtils.validatePhoneInput("96512345678");
 // vr2.isValid()=false, vr2.getError()="Invalid Kuwait mobile number: after +965 must start with 4, 5, 6, 9"
 
 // Find country code from a normalized number
-String cc = PhoneUtils.findCountryCode("96598765432");  // "965"
+String cc = PhoneUtils.findCountryCode("965XXXXXXXX");  // "965"
 String cc2 = PhoneUtils.findCountryCode("12025551234"); // "1"
 
 // Validate against country-specific format rules (length + mobile prefix)
@@ -297,7 +297,7 @@ Raw API errors should never be shown to end users. Map them:
 
 | Situation | API error | Show to user |
 |-----------|----------|--------------|
-| Invalid phone number | ERR006, ERR025 | "Please enter a valid phone number in international format (e.g., +965 9876 5432)." |
+| Invalid phone number | ERR006, ERR025 | "Please enter a valid phone number in international format (e.g., +965 XXXX XXXX)." |
 | Wrong credentials | ERR003 | "SMS service is temporarily unavailable. Please try again later." (log + alert admin) |
 | No balance | ERR010, ERR011 | "SMS service is temporarily unavailable. Please try again later." (alert admin) |
 | Country not supported | ERR026 | "SMS delivery to this country is not available." |
@@ -312,19 +312,19 @@ All formats are accepted and normalized automatically:
 
 | Input | Normalized | Valid? |
 |-------|-----------|--------|
-| `96598765432` | `96598765432` | Yes |
-| `+96598765432` | `96598765432` | Yes |
-| `0096598765432` | `96598765432` | Yes |
-| `965 9876 5432` | `96598765432` | Yes |
-| `965-9876-5432` | `96598765432` | Yes |
-| `(965) 98765432` | `96598765432` | Yes |
-| `٩٦٥٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
-| `۹۶۵۹۸۷۶۵۴۳۲` | `96598765432` | Yes |
-| `+٩٦٥٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
-| `٠٠٩٦٥٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
-| `٩٦٥ ٩٨٧٦ ٥٤٣٢` | `96598765432` | Yes |
-| `٩٦٥-٩٨٧٦-٥٤٣٢` | `96598765432` | Yes |
-| `965٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
+| `965XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `+965XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `00965XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `965 XXXX XXXX` | `965XXXXXXXX` | Yes |
+| `965-XXXX-XXXX` | `965XXXXXXXX` | Yes |
+| `(965) XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `٩٦٥XXXXXXXX` (Arabic-Indic digits) | `965XXXXXXXX` | Yes |
+| `۹۶۵XXXXXXXX` (Persian digits) | `965XXXXXXXX` | Yes |
+| `+٩٦٥XXXXXXXX` (Arabic-Indic digits) | `965XXXXXXXX` | Yes |
+| `٠٠٩٦٥XXXXXXXX` (Arabic-Indic digits) | `965XXXXXXXX` | Yes |
+| `٩٦٥ XXXX XXXX` (Arabic-Indic digits) | `965XXXXXXXX` | Yes |
+| `٩٦٥-XXXX-XXXX` (Arabic-Indic digits) | `965XXXXXXXX` | Yes |
+| `965XXXXXXXX` (local part in Arabic-Indic digits) | `965XXXXXXXX` | Yes |
 | `123456` (too short) | rejected | No |
 | `user@gmail.com` | rejected | No |
 

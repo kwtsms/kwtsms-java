@@ -56,7 +56,7 @@ Response: {"result":"OK","senderid":["KWT-SMS","MY-APP"]}
 Response: {"result":"OK","coverage":["965"]}
 
 ── 4. Validate numbers ──
-Response: {"result":"OK","mobile":{"OK":["96598765432"],"ER":["invalid"],"NR":["966558724477"]}}
+Response: {"result":"OK","mobile":{"OK":["965XXXXXXXX"],"ER":["invalid"],"NR":["966558724477"]}}
 
 ── 5. Send SMS ──
    (TEST MODE — message queued but NOT delivered)
@@ -85,11 +85,11 @@ Numbers must be digits only, international format, no prefix:
 
 | Input | Send as | Why |
 |-------|---------|-----|
-| `96598765432` | `96598765432` | Correct |
-| `+96598765432` | `96598765432` | Strip `+` |
-| `0096598765432` | `96598765432` | Strip `00` |
-| `965 9876 5432` | `96598765432` | Strip spaces |
-| Multiple numbers | `96598765432,96512345678` | Comma-separated, max 200 |
+| `965XXXXXXXX` | `965XXXXXXXX` | Correct |
+| `+965XXXXXXXX` | `965XXXXXXXX` | Strip `+` |
+| `00965XXXXXXXX` | `965XXXXXXXX` | Strip `00` |
+| `965 XXXX XXXX` | `965XXXXXXXX` | Strip spaces |
+| Multiple numbers | `965XXXXXXXX,96512345678` | Comma-separated, max 200 |
 
 ## Response format
 
@@ -122,7 +122,7 @@ Numbers must be digits only, international format, no prefix:
 | ERR009 | Empty message | Provide message text |
 | ERR010 | Zero balance | Recharge at kwtsms.com |
 | ERR011 | Insufficient balance | Buy more credits |
-| ERR025 | Invalid number format | Use international format (e.g., `96598765432`) |
+| ERR025 | Invalid number format | Use international format (e.g., `965XXXXXXXX`) |
 | ERR028 | Sent to the same number too soon. | Duplicate SMS protection is opt-in per account; wait for the account's window (10 seconds by default) |
 
 Full error code reference: [API Documentation (PDF)](https://www.kwtsms.com/doc/KwtSMS.com_API_Documentation_v41.pdf)

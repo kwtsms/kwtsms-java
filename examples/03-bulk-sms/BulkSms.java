@@ -8,9 +8,9 @@ public class BulkSms {
         KwtSMS sms = KwtSMS.fromEnv();
 
         List<String> recipients = Arrays.asList(
-            "96598765432",
+            "965XXXXXXXX",
             "96512345678",
-            "96599887766"
+            "965XXXXXXXX"
             // ... up to thousands of numbers
         );
 

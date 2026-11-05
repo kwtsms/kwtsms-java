@@ -15,7 +15,7 @@ public class BasicUsage {
         }
 
         // Send a single SMS
-        SendResult result = sms.send("96598765432", "Hello from Java!");
+        SendResult result = sms.send("965XXXXXXXX", "Hello from Java!");
         if ("OK".equals(result.getResult())) {
             System.out.println("Sent! Message ID: " + result.getMsgId());
             System.out.println("Balance after: " + result.getBalanceAfter());
@@ -27,7 +27,7 @@ public class BasicUsage {
         }
 
         // Send to multiple numbers
-        SendResult multi = sms.send("96598765432,96512345678", "Bulk test");
+        SendResult multi = sms.send("965XXXXXXXX,96512345678", "Bulk test");
         System.out.println("Multi result: " + multi.getResult());
     }
 }

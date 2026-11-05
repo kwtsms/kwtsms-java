@@ -9,9 +9,7 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Integration tests that hit the live kwtSMS API with test_mode=true.
@@ -20,6 +18,10 @@ import java.util.List;
  * balance() is called ONCE in BeforeAll. The total credits needed is computed
  * upfront. Tests run in order and track a running expected balance so every
  * send result can be verified against it without extra API calls.
+ *
+ * 2026-11-05 09:00 +03: every send goes only to KWTSMS_TEST_NUMBER (TestNumber helper,
+ * skips when unset); the 250-number generated bulk send was removed. Why: the old
+ * hardcoded and generated numbers belong to real people. Task: int-testnumber
  */
 @EnabledIfEnvironmentVariable(named = "JAVA_USERNAME", matches = ".+")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -33,10 +35,8 @@ class IntegrationTest {
 
     // Credits consumed by send tests:
     //   6 single sends (1 each) + wrongSenderId (1, API accepts it) = 7
-    //   250-number bulk = 250
-    //   Total = 257
     // emptySenderId returns ERROR (0 credits), local failures = 0
-    private static final int TOTAL_CREDITS_NEEDED = 257;
+    private static final int TOTAL_CREDITS_NEEDED = 7;
 
     @BeforeAll
     static void setUp() {
@@ -93,14 +93,14 @@ class IntegrationTest {
 
     @Test @Order(6)
     void validate_validNumbers() {
-        ValidateResult result = sms.validate(Arrays.asList("96598765432"));
+        ValidateResult result = sms.validate(Arrays.asList(TestNumber.get()));
         assertNotNull(result);
     }
 
     @Test @Order(7)
     void validate_mixedInputs() {
         ValidateResult result = sms.validate(
-                Arrays.asList("96598765432", "invalid", "user@email.com"));
+                Arrays.asList(TestNumber.get(), "invalid", "user@email.com"));
         assertNotNull(result);
         assertFalse(result.getRejected().isEmpty(), "Should have rejected entries");
     }
@@ -141,20 +141,20 @@ class IntegrationTest {
 
     @Test @Order(13)
     void send_emptyMessage() {
-        SendResult result = sms.send("96599220509", "");
+        SendResult result = sms.send(TestNumber.get(), "");
         assertEquals("ERROR", result.getResult());
     }
 
     @Test @Order(14)
     void send_emojiOnlyMessage() {
-        SendResult result = sms.send("96599220510", "\uD83D\uDE00\uD83D\uDE01\uD83D\uDE02");
+        SendResult result = sms.send(TestNumber.get(),"\uD83D\uDE00\uD83D\uDE01\uD83D\uDE02");
         assertEquals("ERROR", result.getResult());
     }
 
     @Test @Order(15)
     void send_emptySenderId() {
-        // Empty sender ID is rejected by the API — no credits consumed
-        SendResult result = sms.send("96599220508", "Test empty sender", "");
+        // Empty sender ID is rejected by the API: no credits consumed
+        SendResult result = sms.send(TestNumber.get(),"Test empty sender", "");
         assertEquals("ERROR", result.getResult());
         System.out.println("send_emptySenderId | result: ERROR | balance unchanged: " + expectedBalance);
     }
@@ -179,7 +179,7 @@ class IntegrationTest {
         assumeTrue(expectedBalance >= TOTAL_CREDITS_NEEDED,
                 "Insufficient balance: " + expectedBalance + " < " + TOTAL_CREDITS_NEEDED);
 
-        SendResult result = sms.send("96599220501", "Java integration test");
+        SendResult result = sms.send(TestNumber.get(),"Java integration test");
 
         assertEquals("OK", result.getResult());
         assertEquals(1, (int) result.getPointsCharged(), "1 number = 1 credit");
@@ -193,7 +193,7 @@ class IntegrationTest {
     void send_mixedValidAndInvalid() {
         assumeTrue(expectedBalance >= 1, "Insufficient balance");
 
-        SendResult result = sms.send("96599220502,invalid,user@email.com", "Test mixed");
+        SendResult result = sms.send(TestNumber.get() + ",invalid,user@email.com","Test mixed");
 
         assertEquals("OK", result.getResult());
         assertEquals(2, result.getInvalid().size(), "2 invalid entries");
@@ -208,7 +208,7 @@ class IntegrationTest {
     void send_normalizationPlusPrefix() {
         assumeTrue(expectedBalance >= 1, "Insufficient balance");
 
-        SendResult result = sms.send("+96599220503", "Test plus prefix");
+        SendResult result = sms.send(TestNumber.variant("plus"),"Test plus prefix");
 
         assertEquals("OK", result.getResult());
         assertEquals(1, (int) result.getPointsCharged(), "1 credit");
@@ -222,7 +222,7 @@ class IntegrationTest {
     void send_normalization00Prefix() {
         assumeTrue(expectedBalance >= 1, "Insufficient balance");
 
-        SendResult result = sms.send("0096599220504", "Test 00 prefix");
+        SendResult result = sms.send(TestNumber.variant("00"),"Test 00 prefix");
 
         assertEquals("OK", result.getResult());
         assertEquals(1, (int) result.getPointsCharged(), "1 credit");
@@ -236,8 +236,8 @@ class IntegrationTest {
     void send_normalizationArabicDigits() {
         assumeTrue(expectedBalance >= 1, "Insufficient balance");
 
-        // ٩٦٥٩٩٢٢٠٥٠٥ = 96599220505
-        SendResult result = sms.send("\u0669\u0666\u0665\u0669\u0669\u0662\u0662\u0660\u0665\u0660\u0665", "Test Arabic digits");
+        // The test number written in Arabic-Indic digits
+        SendResult result = sms.send(TestNumber.variant("arabic"), "Test Arabic digits");
 
         assertEquals("OK", result.getResult());
         assertEquals(1, (int) result.getPointsCharged(), "1 credit");
@@ -251,7 +251,7 @@ class IntegrationTest {
     void send_duplicateNormalized() {
         assumeTrue(expectedBalance >= 1, "Insufficient balance");
 
-        SendResult result = sms.send("+96599220506,0096599220506", "Test dedup");
+        SendResult result = sms.send(TestNumber.variant("plus") + "," + TestNumber.variant("00"), "Test dedup");
 
         assertEquals("OK", result.getResult());
         assertEquals(1, (int) result.getNumbers(), "Deduplicated to 1 number");
@@ -266,9 +266,9 @@ class IntegrationTest {
     void send_wrongSenderId() {
         assumeTrue(expectedBalance >= 1, "Insufficient balance");
 
-        SendResult result = sms.send("96599220507", "Test wrong sender", "NONEXISTENT-SENDER");
+        SendResult result = sms.send(TestNumber.get(), "Test wrong sender", "NONEXISTENT-SENDER");
 
-        // API accepts unknown sender IDs (falls back to default) — consumes 1 credit
+        // API accepts unknown sender IDs (falls back to default): consumes 1 credit
         assertEquals("OK", result.getResult());
         assertEquals(1, (int) result.getPointsCharged(), "1 credit");
         expectedBalance -= 1;
@@ -277,44 +277,7 @@ class IntegrationTest {
         System.out.println("send_wrongSenderId | -1 | balance: " + expectedBalance);
     }
 
-    // ── 5. Bulk send (250 credits) ──
-
-    @Test @Order(100)
-    void send_250numbers_internalBulk_thenCheckStatus() {
-        int creditsNeeded = 250;
-        assumeTrue(expectedBalance >= creditsNeeded,
-                "Insufficient balance: " + expectedBalance + " < " + creditsNeeded
-                        + ". Delete test messages from kwtsms.com queue to recover credits.");
-
-        System.out.println("Bulk send | balance before: " + expectedBalance
-                + " | credits needed: " + creditsNeeded);
-
-        // Generate 250 numbers: 96599220001 - 96599220250
-        // send() internally splits into 2 batches (200 + 50) with delay
-        List<String> numbers = new ArrayList<>();
-        for (int i = 1; i <= 250; i++) {
-            numbers.add("9659922" + String.format("%04d", i));
-        }
-
-        SendResult result = sms.send(numbers, "Java internal bulk test");
-
-        assertEquals("OK", result.getResult());
-        assertEquals(250, (int) result.getNumbers(), "All 250 numbers accepted");
-        assertEquals(250, (int) result.getPointsCharged(), "250 credits charged");
-        assertNotNull(result.getMsgId(), "Should return a msg-id (first batch)");
-
-        expectedBalance -= creditsNeeded;
-        assertEquals(expectedBalance, result.getBalanceAfter(), 0.01,
-                "Expected balance: " + expectedBalance);
-        System.out.println("Bulk send | -" + creditsNeeded + " | balance: " + expectedBalance);
-
-        // Check status — ERR030 is expected (test mode = queued, not delivered)
-        StatusResult status = sms.status(result.getMsgId());
-        assertEquals("ERR030", status.getCode(), "Test mode message should be ERR030 (queued)");
-        System.out.println("Status: ERR030 (queued test message)");
-    }
-
-    // ── 6. Final balance verification ──
+    // ── 5. Final balance verification ──
 
     @Test @Order(999)
     void balance_finalVerification() {

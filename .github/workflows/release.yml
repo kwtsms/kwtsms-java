@@ -25,6 +25,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Run tests
+        # 2026-11-05 09:02 +03: tests read the test number from this secret and skip when unset. Task: int-testnumber
+        env:
+          KWTSMS_TEST_NUMBER: ${{ secrets.KWTSMS_TEST_NUMBER }}
         run: ./gradlew test
 
       - name: Build JARs

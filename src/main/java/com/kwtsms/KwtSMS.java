@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+// 2026-11-05 09:01 +03: Javadoc example uses the 965XXXXXXXX placeholder, the old sample belongs to a real person. Task: int-testnumber
 /**
  * Official Java client for the kwtSMS SMS gateway API.
  *
@@ -25,7 +26,7 @@ import java.util.Map;
  * System.out.println(v.isOk() + " balance=" + v.getBalance());
  *
  * // Send SMS
- * SendResult r = sms.send("96598765432", "Hello from Java");
+ * SendResult r = sms.send("965XXXXXXXX", "Hello from Java");
  * System.out.println(r.getResult());
  * }</pre>
  */

@@ -137,12 +137,12 @@ public class RawApi {
             "{" +
                 "\"username\":\"" + USERNAME + "\"," +
                 "\"password\":\"" + PASSWORD + "\"," +
-                "\"mobile\":\"96598765432,966558724477,invalid\"" +
+                "\"mobile\":\"965XXXXXXXX,966558724477,invalid\"" +
             "}"
         );
 
         System.out.println("Response: " + validateResponse);
-        // Success: {"result":"OK","mobile":{"OK":["96598765432"],"ER":["invalid"],"NR":["966558724477"]}}
+        // Success: {"result":"OK","mobile":{"OK":["965XXXXXXXX"],"ER":["invalid"],"NR":["966558724477"]}}
         // OK = valid and routable
         // ER = format error
         // NR = no route (country not activated on account)
@@ -166,7 +166,7 @@ public class RawApi {
                 "\"username\":\"" + USERNAME + "\"," +
                 "\"password\":\"" + PASSWORD + "\"," +
                 "\"sender\":\"" + SENDER_ID + "\"," +
-                "\"mobile\":\"96598765432\"," +
+                "\"mobile\":\"965XXXXXXXX\"," +
                 "\"message\":\"Hello from Java raw API example\"," +
                 "\"test\":\"" + TEST_MODE + "\"" +
             "}"
@@ -195,7 +195,7 @@ public class RawApi {
                 "\"username\":\"" + USERNAME + "\"," +
                 "\"password\":\"" + PASSWORD + "\"," +
                 "\"sender\":\"" + SENDER_ID + "\"," +
-                "\"mobile\":\"96598765432,96512345678\"," +
+                "\"mobile\":\"965XXXXXXXX,96512345678\"," +
                 "\"message\":\"Bulk test from Java\"," +
                 "\"test\":\"" + TEST_MODE + "\"" +
             "}"
@@ -249,7 +249,7 @@ public class RawApi {
         );
 
         System.out.println("Response: " + dlrResponse);
-        // Success: {"result":"OK","report":[{"Number":"96598765432","Status":"Received by recipient"}]}
+        // Success: {"result":"OK","report":[{"Number":"965XXXXXXXX","Status":"Received by recipient"}]}
         // Error:   {"result":"ERROR","code":"ERR019","description":"No reports found"}
         System.out.println();
 

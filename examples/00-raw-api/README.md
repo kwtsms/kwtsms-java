@@ -1,6 +1,6 @@
 # 00 - Raw API
 
-Call every kwtSMS REST endpoint directly with `java.net.HttpURLConnection` — no client library, no dependencies. Copy-paste any section into your project.
+Call every kwtSMS REST endpoint directly with `java.net.HttpURLConnection` - no client library, no dependencies. Copy-paste any section into your project.
 
 ## What this example covers
 
@@ -59,7 +59,7 @@ Response: {"result":"OK","coverage":["965"]}
 Response: {"result":"OK","mobile":{"OK":["965XXXXXXXX"],"ER":["invalid"],"NR":["966558724477"]}}
 
 ── 5. Send SMS ──
-   (TEST MODE — message queued but NOT delivered)
+   (TEST MODE - message queued but NOT delivered)
 Response: {"result":"OK","msg-id":"f4c841adee210f31...","numbers":1,"points-charged":1,"balance-after":499.0,"unix-timestamp":1684763355}
 
 ── 7. Message status ──
@@ -73,7 +73,7 @@ Response: {"result":"ERROR","code":"ERR019","description":"No reports found"}
 
 Every request follows the same pattern:
 
-1. **Method**: Always `POST` (never GET — GET logs credentials in server logs)
+1. **Method**: Always `POST` (never GET - GET logs credentials in server logs)
 2. **Content-Type**: `application/json`
 3. **Accept**: `application/json`
 4. **Auth**: `username` + `password` in the JSON body
@@ -117,7 +117,7 @@ Numbers must be digits only, international format, no prefix:
 | Code | Meaning | Fix |
 |------|---------|-----|
 | ERR003 | Wrong username or password | Check API credentials (not your mobile number) |
-| ERR006 | No valid numbers | Strip `+`, `00`, spaces — digits only |
+| ERR006 | No valid numbers | Strip `+`, `00`, spaces - digits only |
 | ERR007 | More than 200 numbers | Split into batches of 200 |
 | ERR009 | Empty message | Provide message text |
 | ERR010 | Zero balance | Recharge at kwtsms.com |
@@ -131,7 +131,7 @@ Full error code reference: [API Documentation (PDF)](https://www.kwtsms.com/doc/
 
 | | Test (`"test":"1"`) | Live (`"test":"0"`) |
 |--|---------------------|---------------------|
-| Message delivered? | No — queued only | Yes |
+| Message delivered? | No - queued only | Yes |
 | Credits consumed? | Held until you delete the message from the Sending Queue | Yes |
 | Use for | Development, testing | Production |
 

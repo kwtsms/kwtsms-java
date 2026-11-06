@@ -6,7 +6,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Raw kwtSMS API example — no client library, no dependencies.
+ * Raw kwtSMS API example - no client library, no dependencies.
  *
  * Demonstrates every kwtSMS REST endpoint using only java.net.HttpURLConnection.
  * Copy-paste any section into your project and adjust the credentials.
@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 public class RawApi {
 
     // ┌──────────────────────────────────────────────────┐
-    // │  CONFIGURE THESE — your kwtSMS API credentials   │
+    // │  CONFIGURE THESE - your kwtSMS API credentials   │
     // └──────────────────────────────────────────────────┘
     static final String USERNAME  = "java_your_api_username";
     static final String PASSWORD  = "java_your_api_password";
@@ -41,7 +41,7 @@ public class RawApi {
             os.write(jsonBody.getBytes(StandardCharsets.UTF_8));
         }
 
-        // Read response — kwtSMS returns JSON even for error status codes
+        // Read response - kwtSMS returns JSON even for error status codes
         java.io.InputStream stream;
         try {
             stream = conn.getInputStream();
@@ -158,7 +158,7 @@ public class RawApi {
 
         System.out.println("── 5. Send SMS ──");
         if ("1".equals(TEST_MODE)) {
-            System.out.println("   (TEST MODE — message queued but NOT delivered)");
+            System.out.println("   (TEST MODE - message queued but NOT delivered)");
         }
 
         String sendResponse = post("send",
@@ -227,7 +227,7 @@ public class RawApi {
         System.out.println("Response: " + statusResponse);
         // Success: {"result":"OK","status":"sent","description":"Message successfully sent to gateway"}
         // Error:   {"result":"ERROR","code":"ERR029","description":"Message does not exist"}
-        // ERR030:  Message stuck in queue — delete at kwtsms.com to recover credits
+        // ERR030:  Message stuck in queue - delete at kwtsms.com to recover credits
         System.out.println();
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

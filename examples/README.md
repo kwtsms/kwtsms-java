@@ -4,7 +4,7 @@ Usage examples for the kwtsms-java library.
 
 | # | Example | Description |
 |---|---------|-------------|
-| 00 | [Raw API](00-raw-api/) | Call every kwtSMS endpoint directly — no library, no dependencies |
+| 00 | [Raw API](00-raw-api/) | Call every kwtSMS endpoint directly - no library, no dependencies |
 | 01 | [Basic Usage](01-basic-usage/) | Send an SMS, check balance, verify credentials |
 | 02 | [OTP Flow](02-otp-flow/) | One-time password implementation |
 | 03 | [Bulk SMS](03-bulk-sms/) | Send to large recipient lists with auto-batching |

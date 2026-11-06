@@ -44,7 +44,7 @@ repositories {
 
 // build.gradle
 dependencies {
-    implementation 'com.github.kwtsms:kwtsms-java:0.4.0'
+    implementation 'com.github.kwtsms:kwtsms-java:0.5.0'
 }
 ```
 
@@ -58,7 +58,7 @@ repositories {
 
 // build.gradle.kts
 dependencies {
-    implementation("com.github.kwtsms:kwtsms-java:0.4.0")
+    implementation("com.github.kwtsms:kwtsms-java:0.5.0")
 }
 ```
 
@@ -75,7 +75,7 @@ dependencies {
 <dependency>
     <groupId>com.github.kwtsms</groupId>
     <artifactId>kwtsms-java</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 
@@ -128,7 +128,7 @@ personal or customer data. Pass your own product token as the sixth constructor 
 
 ```java
 KwtSMS sms = new KwtSMS("java_your_api_user", "java_your_api_pass", "MY-SENDER", false, "kwtsms.log", "my-shop/2.1.0");
-// User-Agent: my-shop/2.1.0 kwtsms-java/0.4.1
+// User-Agent: my-shop/2.1.0 kwtsms-java/0.5.0
 ```
 
 ## Credential Management
@@ -437,7 +437,7 @@ See the [examples/](examples/) directory:
 
 | # | Example | Description |
 |---|---------|-------------|
-| 00 | [Raw API](examples/00-raw-api/) | Call every kwtSMS endpoint directly — no library, no dependencies |
+| 00 | [Raw API](examples/00-raw-api/) | Call every kwtSMS endpoint directly - no library, no dependencies |
 | 01 | [Basic Usage](examples/01-basic-usage/) | Verify credentials, send SMS, check balance |
 | 02 | [OTP Flow](examples/02-otp-flow/) | Validate phone, send OTP with best practices |
 | 03 | [Bulk SMS](examples/03-bulk-sms/) | Bulk send with >200 number batching |

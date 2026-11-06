@@ -1,8 +1,14 @@
 package com.kwtsms;
 
+import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+// 2026-11-07 00:03 +03: HttpServer, OutputStream, InetSocketAddress, StandardCharsets added for the mocked
+// wrong-credentials test below (task neg-auth-tests).
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -126,6 +132,38 @@ class ApiErrorsTest {
         Map<String, Object> enriched = ApiErrors.enrichError(r);
         assertNull(enriched.get("action")); // No action for unknown codes
         assertEquals("Something unknown", enriched.get("description"));
+    }
+
+    // 2026-11-07 00:03 +03: wrong-credential test mocked; live failed logins trip the security log (task neg-auth-tests).
+    // Replaces IntegrationTest.verify_wrongCredentials: a local 127.0.0.1 server answers the balance call
+    // with HTTP 403 + ERR003 JSON (as the live API does); same parse + enrich path verify() uses. No internet.
+    @Test
+    void wrongCredentials_err003FromServer_parsedAndEnriched() throws Exception {
+        HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        server.createContext("/API/balance/", ex -> {
+            byte[] body = ("{\"result\":\"ERROR\",\"code\":\"ERR003\","
+                    + "\"description\":\"Authentication error, username or password are not correct.\"}")
+                    .getBytes(StandardCharsets.UTF_8);
+            ex.sendResponseHeaders(403, body.length);
+            try (OutputStream os = ex.getResponseBody()) {
+                os.write(body);
+            }
+        });
+        server.start();
+        try {
+            Map<String, Object> payload = new LinkedHashMap<>();
+            payload.put("username", "java_wrong_user");
+            payload.put("password", "java_wrong_pass");
+            String base = "http://127.0.0.1:" + server.getAddress().getPort() + "/API";
+            Map<String, Object> r = ApiRequest.post(base, "balance", payload, "", KwtSMS.buildUserAgent(null));
+            assertEquals("ERROR", r.get("result"));
+            assertEquals("ERR003", r.get("code"));
+            Map<String, Object> enriched = ApiErrors.enrichError(r);
+            assertTrue(enriched.get("description").toString().contains("Authentication error"));
+            assertTrue(enriched.get("action").toString().contains("KWTSMS_USERNAME"));
+        } finally {
+            server.stop(0);
+        }
     }
 
     private Map<String, Object> mockError(String code, String description) {

@@ -28,7 +28,7 @@ import java.util.Arrays;
 class IntegrationTest {
 
     private static KwtSMS sms;
-    private static KwtSMS badSms;
+    // 2026-11-07 00:03 +03: badSms (wrong-credentials client) removed; live failed logins trip the security log (task neg-auth-tests).
 
     /** Balance retrieved once in BeforeAll. Updated after each send. */
     private static double expectedBalance;
@@ -43,7 +43,6 @@ class IntegrationTest {
         String username = System.getenv("JAVA_USERNAME");
         String password = System.getenv("JAVA_PASSWORD");
         sms = new KwtSMS(username, password, "KWT-SMS", true, "");
-        badSms = new KwtSMS("java_wrong_user", "java_wrong_pass", "KWT-SMS", true, "");
 
         // ONE balance call for the entire test class
         Double bal = sms.balance();
@@ -62,12 +61,8 @@ class IntegrationTest {
         assertNotNull(result.getBalance(), "Balance should be a number");
     }
 
-    @Test @Order(2)
-    void verify_wrongCredentials() {
-        VerifyResult result = badSms.verify();
-        assertFalse(result.isOk(), "verify() should fail with wrong credentials");
-        assertNotNull(result.getError(), "Should have an error message");
-    }
+    // 2026-11-07 00:03 +03: wrong-credential test mocked; live failed logins trip the security log (task neg-auth-tests).
+    // verify_wrongCredentials moved offline: ApiErrorsTest.wrongCredentials_err003FromServer_parsedAndEnriched.
 
     @Test @Order(3)
     void balance_returnsNumber() {

@@ -10,76 +10,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.5.0] - 2026-11-06
 
 ### Added
-- The client sends a User-Agent `kwtsms-java/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional sixth constructor argument `appName` puts your app's token in front, e.g. `kwtsms-wordpress/3.5.2 kwtsms-java/0.5.0`. New `KwtSMS.VERSION` (generated from build.gradle at build time), `KwtSMS.buildUserAgent()` and `getUserAgent()`.
+- Client identifies itself with name and version; optional app name argument.
 
 ### Changed
 - Package author and license holder are now kwtSMS.
-- Docs, examples, Javadoc and the ERR006/ERR025 action text use the placeholder `965XXXXXXXX` instead of a real-looking phone number. Tests read the number from the `KWTSMS_TEST_NUMBER` environment variable and are skipped when it is unset.
-- The live 250-number bulk send test was removed: it sent to generated numbers that may belong to real people. Live tests now send only to `KWTSMS_TEST_NUMBER`. The client has no HTTP seam, so batching (200 + 50) is not covered by an offline test.
-
-### Docs
-- Test mode: test messages are queued but not delivered. Their credits are held until you delete them from the Sending Queue in your kwtsms.com account (previously documented as "no credits consumed").
-- ERR028 action text no longer states a fixed 15-second wait. Duplicate SMS protection is opt-in per account and its window is set per account (10 seconds by default).
 
 ## [0.4.0] - 2026-03-13
 
 ### Added
-- Country-specific phone validation: 75+ country rules (local length + mobile prefix)
-- `PhoneUtils.findCountryCode()`: match country code from normalized number (3, 2, or 1 digit)
-- `PhoneUtils.validatePhoneFormat()`: validate against country-specific format rules
-- Trunk prefix stripping in `normalizePhone()` (e.g., 9660559... becomes 966559..., 97105x becomes 9715x)
-- `PHONE_RULES` map with validation rules for GCC, Levant, Africa, Asia, Europe, Americas, Oceania
-- `COUNTRY_NAMES` map for human-readable error messages
-- GitGuardian secret scanning workflow
-- Zero Dependencies badge in README
+- Country-specific phone validation.
+- Trunk prefix handling in phone normalization.
+- Zero Dependencies badge in README.
 
 ### Removed
-- CLI tool (`CLI.java`, `CLIIntegrationTest.java`). Replaced by standalone [kwtsms-cli](https://github.com/boxlinknet/kwtsms-cli)
-- `application` plugin and `mainClass` from build.gradle
+- Built-in CLI. Replaced by the standalone [kwtsms-cli](https://github.com/boxlinknet/kwtsms-cli).
 
 ## [0.3.0] - 2026-03-06
 
 ### Added
-- Raw API example (00-raw-api) demonstrating all kwtSMS endpoints without the client library
-- Examples 01-06: basic usage, OTP flow, bulk SMS, Spring endpoint, error handling, OTP production
-- Auto-release workflow (one-click release via Actions UI)
-- Auto-merge workflow for Dependabot patch/minor updates
-- Stale issue/PR cleanup workflow
-- `status()`: check message queue status
-- `deliveryReport()`: delivery reports for international numbers
+- Raw API example and examples 01-06.
+- Auto-release and auto-merge workflows.
+- `status()` and `deliveryReport()`.
 
 ## [0.2.0] - 2026-03-06
 
 ### Changed
-- All credential placeholder values prefixed with `java_` (e.g., `java_your_api_user`) so API requests are identifiable per language client
-- Updated all docs and examples with `java_` prefixed placeholder values
-
-### Updated
-- actions/checkout v4 → v6
-- actions/setup-java v4 → v5
-- gradle/actions v4 → v5
-- github/codeql-action v3 → v4
+- Credential placeholders prefixed with `java_` in docs and examples.
 
 ## [0.1.0] - 2026-03-06
 
 ### Added
 - Initial release
-- `KwtSMS` client class with constructor and `fromEnv()` factory
-- `verify()`: test credentials and get balance
-- `balance()`: get credits with cached fallback
-- `send()`: send SMS to single or multiple numbers
-- `sendBulk()`: auto-batching for >200 numbers with ERR013 retry
-- `validate()`: validate phone numbers via API
-- `senderIds()`: list sender IDs
-- `coverage()`: list active country prefixes
-- `status()`: check message queue status
-- `deliveryReport()`: delivery reports for international numbers
-- `PhoneUtils`: `normalizePhone()`, `validatePhoneInput()`, `deduplicatePhones()`
-- `MessageUtils`: `cleanMessage()` (emoji, HTML, control chars, Arabic digit conversion)
-- `ApiErrors`: complete error code map with developer-friendly action messages, `enrichError()`
-- `EnvLoader`: `.env` file parser (never modifies system environment)
-- JSONL logging with password masking
-- Thread-safe: `volatile` cached balance fields
+- `KwtSMS` client with `verify()`, `balance()`, `send()`, `sendBulk()`, `validate()`, `senderIds()`, `coverage()`, `status()` and `deliveryReport()`
+- Phone and message utilities
+- Error code map with developer-friendly messages
+- `.env` loader
+- JSONL logging
 - Zero runtime dependencies (Java 8+ stdlib only)
-- Unit tests (phone, message, errors, env loader)
-- Integration tests (live API with test_mode, skipped without JAVA_USERNAME)
+- Unit and integration tests

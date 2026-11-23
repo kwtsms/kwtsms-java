@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/readme-header-dark.png">
+  <img alt="kwtSMS for Java: SMS and OTP through kwtSMS" src=".github/assets/readme-header-light.png">
+</picture>
+
 # kwtSMS Java Client
 
 [![Tests](https://github.com/kwtsms/kwtsms-java/actions/workflows/test.yml/badge.svg)](https://github.com/kwtsms/kwtsms-java/actions/workflows/test.yml)
